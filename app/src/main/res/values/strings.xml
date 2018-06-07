@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">Crimer</string>
+
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="login_welcome_title">Welcome to Crimer</string>
+    <string name="login_welcome_subtitle">Log in with your Crimer Account.</string>
+    <string name="login_log_in">Log In</string>
+    <string name="login_register">Create An Account</string>
+    <string name="login_register_dialog">Don\'t have an account yet?</string>
+    <string name="register_title">Creating Account</string>
+    <string name="name">Name</string>
+    <string name="register_register">Register</string>
+</resources>
