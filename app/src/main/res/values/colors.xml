@@ -8,6 +8,7 @@
     <color name="colorSecondaryText">#757575</color>
     <color name="colorWhiteText">#FFFFFF</color>
     <color name="colorIcons">#212121</color>
+    <color name="colorIconsLight">#BDBDBD</color>
     <color name="colorDivider">#BDBDBD</color>
 
     <color name="black_overlay">#66000000</color>

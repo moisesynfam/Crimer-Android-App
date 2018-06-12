@@ -13,5 +13,7 @@
     <string name="login_register_dialog">Don\'t have an account yet?</string>
     <string name="register_title">Creating Account</string>
     <string name="name">Name</string>
+    <string name="username">Username</string>
     <string name="register_register">Register</string>
+    <string name="register_select_image_dialog">Select Picture</string>
 </resources>
