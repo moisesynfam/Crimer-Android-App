@@ -16,4 +16,10 @@
     <string name="username">Username</string>
     <string name="register_register">Register</string>
     <string name="register_select_image_dialog">Select Picture</string>
+
+    <!--Image picker bottom sheet layout-->
+    <string name="img_bttm_sheet_title">Add Profile Picture</string>
+    <string name="img_bttm_sheet_camera_opt">Use Camera</string>
+    <string name="img_bttm_sheet_gallery_opt">Use Gallery</string>
+    <string name="img_bttm_sheet_delete_opt">Remove Picture</string>
 </resources>

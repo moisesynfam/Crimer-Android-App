@@ -29,6 +29,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.mikhaellopez.circularimageview.CircularImageView;
 import com.mobsandgeeks.saripaar.ValidationError;
 import com.mobsandgeeks.saripaar.Validator;
 import com.mobsandgeeks.saripaar.annotation.Email;
@@ -45,9 +46,11 @@ public class RegisterActivity extends AppCompatActivity implements Validator.Val
 
     //ACTIVITY RESULTS CODES
     private final int PICK_IMAGE_REQUEST = 100;
+    private final int TAKE_IMAGE_REQUEST = 101;
 
     //PERMISSION REQUEST CODE
-    private final int ALL_PERMISSIONS_REQUEST = 200;
+    private final int STORAGE_PERMISSION_REQUEST = 200;
+    private final int CAMERA_PERMISSION_REQUEST = 201;
 
     @NotEmpty
     private EditText name;
@@ -61,13 +64,15 @@ public class RegisterActivity extends AppCompatActivity implements Validator.Val
     private EditText password;
 
     private Button registerBtn;
-    private AppCompatImageView profileImage;
+    private CircularImageView profileImage;
 
     private Validator registerValidator;
 
     private FirebaseAuth mAuth;
 
     private Uri profilePicturePath;
+
+    private ImagePickerBottomSheetFragment imagePickerFragment;
 
 
 
@@ -92,13 +97,38 @@ public class RegisterActivity extends AppCompatActivity implements Validator.Val
                 registerValidator.validate();
             }
         });
+        imagePickerFragment = ImagePickerBottomSheetFragment.newInstance();
+        imagePickerFragment.addButtonClickListener(new ImagePickerBottomSheetFragment.ButtonClickListener() {
+            @Override
+            public void onClick(View button) {
+                 switch (button.getId()) {
+                     case R.id.img_bttm_sheet_camera_btn:
+                         if(checkForCameraPermission()) {
+                             takeImage();
+                         }
+                         break;
+                     case R.id.img_bttm_sheet_gallery_btn:
+                         if(checkForStoragePermissions()) {
+                             chooseImage();
+                         }
+                         break;
+                     case R.id.img_bttm_sheet_delete_btn:
+                         break;
+                 }
+            }
+        });
 
         profileImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //if all the permissions are granted proceed to pick the image
-                if(checkForPermissions())
-                    chooseImage();
+//                if(checkForPermissions())
+//                    chooseImage();
+
+                imagePickerFragment.show(getSupportFragmentManager(),
+                        "pick_photo_dialog_fragment");
+
+
             }
         });
 
@@ -114,6 +144,12 @@ public class RegisterActivity extends AppCompatActivity implements Validator.Val
 
 
         startActivityForResult(Intent.createChooser(intent, getString(R.string.register_select_image_dialog)), PICK_IMAGE_REQUEST);
+    }
+
+    public void takeImage() {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+        intent.setType("image/*");
+        startActivityForResult(Intent.createChooser(intent, getString(R.string.register_select_image_dialog)), TAKE_IMAGE_REQUEST);
     }
 
     @Override
@@ -186,15 +222,25 @@ public class RegisterActivity extends AppCompatActivity implements Validator.Val
                 });
     }
 
-    private boolean checkForPermissions() {
-
-        ArrayList<String> permissionsNeeded = new ArrayList<>();
-
+    private  boolean checkForCameraPermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                 != PackageManager.PERMISSION_GRANTED) {
             // Permission is not granted
-            permissionsNeeded.add(Manifest.permission.CAMERA);
+            ActivityCompat.requestPermissions(this,
+                    //array of permissions to request
+                    new String[] {Manifest.permission.CAMERA}, CAMERA_PERMISSION_REQUEST
+                    //Request code
+            );
+
+            return false;
         }
+        return true;
+    }
+
+    private boolean checkForStoragePermissions() {
+
+        ArrayList<String> permissionsNeeded = new ArrayList<>();
+
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -213,7 +259,8 @@ public class RegisterActivity extends AppCompatActivity implements Validator.Val
                     //array of permissions to request
                     permissionsNeeded.toArray(new String[permissionsNeeded.size()]),
                     //Request code
-                    ALL_PERMISSIONS_REQUEST );
+                    STORAGE_PERMISSION_REQUEST
+                     );
             return false;
         }
 
@@ -224,10 +271,23 @@ public class RegisterActivity extends AppCompatActivity implements Validator.Val
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 //        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
-            case ALL_PERMISSIONS_REQUEST:{
+            case STORAGE_PERMISSION_REQUEST:{
                 if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
                     // permissions granted.
                     chooseImage();
+                } else {
+                    String perStr = "";
+                    for (String per : permissions) {
+                        perStr += "\n" + per;
+                    }
+                    // permissions list of don't granted permission
+                }
+                break;
+            }
+            case CAMERA_PERMISSION_REQUEST: {
+                if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                    // permissions granted.
+                    takeImage();
                 } else {
                     String perStr = "";
                     for (String per : permissions) {
