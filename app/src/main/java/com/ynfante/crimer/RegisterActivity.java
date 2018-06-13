@@ -35,6 +35,8 @@ import com.mobsandgeeks.saripaar.Validator;
 import com.mobsandgeeks.saripaar.annotation.Email;
 import com.mobsandgeeks.saripaar.annotation.NotEmpty;
 import com.mobsandgeeks.saripaar.annotation.Password;
+import com.myhexaville.smartimagepicker.ImagePicker;
+import com.myhexaville.smartimagepicker.OnImagePickedListener;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -74,6 +76,8 @@ public class RegisterActivity extends AppCompatActivity implements Validator.Val
 
     private ImagePickerBottomSheetFragment imagePickerFragment;
 
+    private ImagePicker imagePicker;
+
 
 
 
@@ -101,22 +105,36 @@ public class RegisterActivity extends AppCompatActivity implements Validator.Val
         imagePickerFragment.addButtonClickListener(new ImagePickerBottomSheetFragment.ButtonClickListener() {
             @Override
             public void onClick(View button) {
+
                  switch (button.getId()) {
+
                      case R.id.img_bttm_sheet_camera_btn:
-                         if(checkForCameraPermission()) {
+                         if(checkForPicturesPermissions(true)) {
                              takeImage();
                          }
                          break;
                      case R.id.img_bttm_sheet_gallery_btn:
-                         if(checkForStoragePermissions()) {
+                         if(checkForPicturesPermissions(false)) {
                              chooseImage();
                          }
                          break;
                      case R.id.img_bttm_sheet_delete_btn:
                          break;
                  }
+                imagePickerFragment.dismiss();
             }
         });
+
+        imagePicker = new ImagePicker(this, null, new OnImagePickedListener() {
+            @Override
+            public void onImagePicked(Uri imageUri) {
+                profilePicturePath = imageUri;
+                Glide.with(RegisterActivity.this)
+                        .load(profilePicturePath)
+                        .apply(RequestOptions.centerCropTransform())
+                        .into(profileImage);
+            }
+        }).setWithImageCrop(1,1);
 
         profileImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -125,8 +143,9 @@ public class RegisterActivity extends AppCompatActivity implements Validator.Val
 //                if(checkForPermissions())
 //                    chooseImage();
 
-                imagePickerFragment.show(getSupportFragmentManager(),
-                        "pick_photo_dialog_fragment");
+//                imagePickerFragment.show(getSupportFragmentManager(),
+//                        "pick_photo_dialog_fragment");
+                imagePicker.choosePicture(true);
 
 
             }
@@ -147,14 +166,15 @@ public class RegisterActivity extends AppCompatActivity implements Validator.Val
     }
 
     public void takeImage() {
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
-        intent.setType("image/*");
-        startActivityForResult(Intent.createChooser(intent, getString(R.string.register_select_image_dialog)), TAKE_IMAGE_REQUEST);
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        //intent.setType("image/*");
+        startActivityForResult(intent, TAKE_IMAGE_REQUEST);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        imagePicker.handleActivityResult(resultCode, requestCode, data);
         if(requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK
                 && data != null && data.getData() != null )
         {
@@ -180,6 +200,18 @@ public class RegisterActivity extends AppCompatActivity implements Validator.Val
             {
                 e.printStackTrace();
             }
+        }
+
+        if (requestCode == TAKE_IMAGE_REQUEST && resultCode == RESULT_OK) {
+            Bundle extras = data.getExtras();
+            Bitmap imageBitmap = (Bitmap) extras.get("data");
+//            profilePicturePath= data.getData();
+            Log.d(TAG, "Image loaded");
+            Glide.with(this)
+                    .load(imageBitmap)
+                    .apply(RequestOptions.centerCropTransform())
+                    .into(profileImage);
+
         }
     }
 
@@ -222,26 +254,15 @@ public class RegisterActivity extends AppCompatActivity implements Validator.Val
                 });
     }
 
-    private  boolean checkForCameraPermission() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
-                != PackageManager.PERMISSION_GRANTED) {
-            // Permission is not granted
-            ActivityCompat.requestPermissions(this,
-                    //array of permissions to request
-                    new String[] {Manifest.permission.CAMERA}, CAMERA_PERMISSION_REQUEST
-                    //Request code
-            );
-
-            return false;
-        }
-        return true;
-    }
-
-    private boolean checkForStoragePermissions() {
+    private boolean checkForPicturesPermissions(boolean forCamera) {
 
         ArrayList<String> permissionsNeeded = new ArrayList<>();
 
-
+        if ( forCamera && ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            // Permission is not granted
+            permissionsNeeded.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        }
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
             // Permission is not granted
@@ -255,12 +276,22 @@ public class RegisterActivity extends AppCompatActivity implements Validator.Val
 
         //if the list is not empty we proceed to task the user for permission
         if (permissionsNeeded.size() > 0) {
-            ActivityCompat.requestPermissions(this,
-                    //array of permissions to request
-                    permissionsNeeded.toArray(new String[permissionsNeeded.size()]),
-                    //Request code
-                    STORAGE_PERMISSION_REQUEST
-                     );
+            if(forCamera) {
+                ActivityCompat.requestPermissions(this,
+                        //array of permissions to request
+                        permissionsNeeded.toArray(new String[permissionsNeeded.size()]),
+                        //Request code
+                        CAMERA_PERMISSION_REQUEST
+                );
+            } else {
+                ActivityCompat.requestPermissions(this,
+                        //array of permissions to request
+                        permissionsNeeded.toArray(new String[permissionsNeeded.size()]),
+                        //Request code
+                        STORAGE_PERMISSION_REQUEST
+                );
+            }
+
             return false;
         }
 
@@ -270,6 +301,7 @@ public class RegisterActivity extends AppCompatActivity implements Validator.Val
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 //        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        imagePicker.handlePermission(requestCode, grantResults);
         switch (requestCode) {
             case STORAGE_PERMISSION_REQUEST:{
                 if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
