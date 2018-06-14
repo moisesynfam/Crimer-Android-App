@@ -28,4 +28,5 @@
     <string name="general_dismiss">Dismiss</string>
     <string name="register_user_error_title">Error registering your data</string>
     <string name="register_user_error_content">There was an error trying to store your data to the server. Please try again later</string>
+    <string name="login_error_message">There was an error trying to log in. Please try again later.</string>
 </resources>

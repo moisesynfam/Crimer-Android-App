@@ -14,6 +14,7 @@ import android.support.v4.widget.ImageViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatImageView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -21,10 +22,12 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -102,6 +105,19 @@ public class RegisterActivity extends AppCompatActivity implements Validator.Val
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
         username = findViewById(R.id.register_username_input);
         name = findViewById(R.id.register_name_input);
         password = findViewById(R.id.register_password_input);
@@ -189,6 +205,12 @@ public class RegisterActivity extends AppCompatActivity implements Validator.Val
                 .title(R.string.register_image_uploading_error_title)
                 .content(R.string.register_image_uploading_error_content)
                 .positiveText(R.string.general_dismiss)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        goToPosts();
+                    }
+                })
                 .build();
 
         userErrorDialog = new MaterialDialog.Builder(this)
@@ -278,7 +300,7 @@ public class RegisterActivity extends AppCompatActivity implements Validator.Val
         }
     }
 
-    public void registerUser(final String name, final String username, String email, String password) {
+    public void registerUser(final String name, final String username, final String email, String password) {
         userProgressDialog.show();
         Log.d(TAG, "registerUser:started");
         mAuth.createUserWithEmailAndPassword(email, password)
@@ -292,6 +314,8 @@ public class RegisterActivity extends AppCompatActivity implements Validator.Val
                             storeNewUser(user, name, username);
 
                         } else {
+                            userProgressDialog.dismiss();
+                            userErrorDialog.show();
                             Log.d(TAG, "createUserWithEmail:fail");
                             Log.d(TAG, task.getException().getMessage());
                         }
@@ -314,6 +338,9 @@ public class RegisterActivity extends AppCompatActivity implements Validator.Val
                 @Override
                 public void onFailure(@NonNull Exception e) {
                     Log.e(TAG, e.getMessage());
+                    user.delete();
+                    userProgressDialog.dismiss();
+                    userErrorDialog.show();
                 }
             });
     }
@@ -322,18 +349,32 @@ public class RegisterActivity extends AppCompatActivity implements Validator.Val
         if( profilePicturePath != null) {
             final StorageReference newPictureRef = profilePictureReference.child(user.getUid() + ".jpeg");
             UploadTask profileUploadTask = newPictureRef.putFile(profilePicturePath);
-            profileUploadTask.addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+
+            Task<Uri> urlTask =  profileUploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                 @Override
-                public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                    if (!task.isSuccessful()) {
+
+                        throw task.getException();
+                    }
+
+                    return  newPictureRef.getDownloadUrl();
+                }
+            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                @Override
+                public void onComplete(@NonNull Task<Uri> task) {
                     if (task.isSuccessful()) {
-                        Uri downloadUri = newPictureRef.getDownloadUrl().getResult();
+                        Uri downloadUri = task.getResult();
+                        Log.d(TAG,"Image URI:" + downloadUri.toString());
                         saveProfilePicture(user, downloadUri);
                     } else {
                         //here we display error message
-                        goToPosts();
+                        userProgressDialog.dismiss();
+                        imageErrorDialog.show();
                     }
                 }
             });
+
         } else {
             goToPosts();
         }
@@ -341,20 +382,26 @@ public class RegisterActivity extends AppCompatActivity implements Validator.Val
 
     public void goToPosts() {
         Intent intent = new Intent(this, MainActivity.class);
+        //This is used to close all other activities and start the main one
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
-
     }
 
     public void saveProfilePicture(FirebaseUser user, Uri downloadUrl) {
 
-        database.collection("users").document(user.getUid()).update("photoUrl", downloadUrl)
+        database.collection("users").document(user.getUid()).update("photoUrl", downloadUrl.toString())
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if( !task.isSuccessful() ) {
                             Log.w(TAG, task.getException().getMessage());
+                            userProgressDialog.dismiss();
+                            imageErrorDialog.show();
+                        } else {
+                            goToPosts();
                         }
-                        goToPosts();
+
                     }
                 });
 
