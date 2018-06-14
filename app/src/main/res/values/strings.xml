@@ -22,4 +22,10 @@
     <string name="img_bttm_sheet_camera_opt">Use Camera</string>
     <string name="img_bttm_sheet_gallery_opt">Use Gallery</string>
     <string name="img_bttm_sheet_delete_opt">Remove Picture</string>
+    <string name="register_user_loading_title">Storing your information. Please wait..</string>
+    <string name="register_image_uploading_error_title">Error uploading image</string>
+    <string name="register_image_uploading_error_content">There was an error trying to upload your profile picture to the server. Please try again later</string>
+    <string name="general_dismiss">Dismiss</string>
+    <string name="register_user_error_title">Error registering your data</string>
+    <string name="register_user_error_content">There was an error trying to store your data to the server. Please try again later</string>
 </resources>
