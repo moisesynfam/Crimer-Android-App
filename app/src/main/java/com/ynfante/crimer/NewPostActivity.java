@@ -20,13 +20,26 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.mobsandgeeks.saripaar.ValidationError;
 import com.mobsandgeeks.saripaar.Validator;
 import com.mobsandgeeks.saripaar.annotation.NotEmpty;
 import com.myhexaville.smartimagepicker.ImagePicker;
 import com.myhexaville.smartimagepicker.OnImagePickedListener;
+import com.ynfante.crimer.Models.Post;
 
 import java.util.List;
+import java.util.UUID;
 
 public class NewPostActivity extends AppCompatActivity {
 
@@ -53,6 +66,15 @@ public class NewPostActivity extends AppCompatActivity {
     private Validator formValidator;
 
     private ImagePicker imagePicker;
+
+    private MaterialDialog imageUploadingDialog;
+    private MaterialDialog errorUploadingDialog;
+
+
+    private StorageReference postPicturesReference;
+    private FirebaseFirestore database;
+    private FirebaseUser user;
+    private String postId;
 
 
 
@@ -122,19 +144,7 @@ public class NewPostActivity extends AppCompatActivity {
             }
         });
 
-        cancelDialog = new MaterialDialog.Builder(this)
-                .title(R.string.new_post_cancel_dialog_title)
-                .positiveText(R.string.general_yes)
-                .onPositive(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        dialog.dismiss();
-                        finish();
-                    }
-                })
-                .negativeText(R.string.general_no)
-                .autoDismiss(true)
-                .build();
+
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -166,6 +176,39 @@ public class NewPostActivity extends AppCompatActivity {
         });
 
 
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        postPicturesReference = FirebaseStorage.getInstance().getReference("images/posts");
+        database = FirebaseFirestore.getInstance();
+
+        initDialogs();
+    }
+
+    public void initDialogs() {
+        cancelDialog = new MaterialDialog.Builder(this)
+                .title(R.string.new_post_cancel_dialog_title)
+                .positiveText(R.string.general_yes)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        dialog.dismiss();
+                        finish();
+                    }
+                })
+                .negativeText(R.string.general_no)
+                .autoDismiss(true)
+                .build();
+
+        errorUploadingDialog = new MaterialDialog.Builder(this)
+                .title("Error Submitting Post")
+                .content("There was an error trying to submit your posts to the server. Please try again later.")
+                .positiveText(R.string.general_dismiss)
+                .build();
+
+        imageUploadingDialog = new MaterialDialog.Builder(this)
+                .content("Your post is being submitted. Please Wait...")
+                .progress(false, 0)
+                .canceledOnTouchOutside(false)
+                .build();
     }
 
     @Override
@@ -185,6 +228,68 @@ public class NewPostActivity extends AppCompatActivity {
     }
 
     public void submitPost () {
+        postId = createTransactionID();
+        Log.d(TAG, "NEW UUID: " + postId);
+        final StorageReference newPictureRef = postPicturesReference.child(postId);
+
+        newPictureRef.putFile(imageUri)
+            .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                    if(!imageUploadingDialog.isShowing()) {
+                        imageUploadingDialog.setMaxProgress((int) taskSnapshot.getTotalByteCount());
+                        imageUploadingDialog.show();
+                    }
+                    imageUploadingDialog.setProgress((int) taskSnapshot.getBytesTransferred());
+
+                }
+            })
+            .continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                @Override
+                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                    if (!task.isSuccessful()) {
+
+                        throw task.getException();
+                    }
+
+                    return  newPictureRef.getDownloadUrl();
+                }
+            })
+            .addOnCompleteListener(new OnCompleteListener<Uri>() {
+                @Override
+                public void onComplete(@NonNull Task<Uri> task) {
+                    imageUploadingDialog.dismiss();
+                    if (task.isSuccessful()) {
+                        Uri downloadUri = task.getResult();
+                        Log.d(TAG,"Image URI:" + downloadUri.toString());
+                        storePost( downloadUri.toString());
+                    } else {
+                        //here we display error message
+                        errorUploadingDialog.show();
+                        Log.e(TAG,task.getException().getMessage());
+                    }
+                }
+            });
+
+
+    }
+
+    public void storePost(String imageUrl) {
+        Post newPost = new Post(user.getUid(), imageUrl, title.getText().toString(), content.getText().toString());
+        database.collection("posts").document(postId).set(newPost).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.isSuccessful()) {
+                    Log.d(TAG, "New Post: "+postId);
+                    finish();
+                } else {
+                    errorUploadingDialog.show();
+                    Log.d(TAG,  task.getException().getMessage());
+                }
+            }
+        });
+
+
 
     }
 
@@ -212,5 +317,9 @@ public class NewPostActivity extends AppCompatActivity {
 
         imagePicker.handleActivityResult(resultCode, requestCode, data);
 
+    }
+
+    public String createTransactionID() {
+        return UUID.randomUUID().toString().replaceAll("-", "");
     }
 }
