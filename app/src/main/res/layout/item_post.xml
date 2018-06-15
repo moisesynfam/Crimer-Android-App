@@ -26,6 +26,8 @@
     </FrameLayout>
 
     <RelativeLayout
+        android:background="?android:selectableItemBackground"
+        android:id="@+id/item_post_ly"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
         android:layout_weight="8"
@@ -79,6 +81,7 @@
             app:cardCornerRadius="5dp"
             app:cardElevation="0dp"
             app:cardPreventCornerOverlap="true"
+            android:id="@+id/item_post_image_ly"
             >
             <ImageView
 
@@ -95,6 +98,18 @@
 
                 />
         </android.support.v7.widget.CardView>
+
+
+        <TextView
+            android:drawableStart="@drawable/ic_location_on"
+            android:drawableTint="@color/colorSecondaryText"
+            android:layout_marginTop="5dp"
+            android:layout_below="@id/item_post_image_ly"
+            android:text="Calle 24, Santiago De los Caballeros 51000, Dominican Republic"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/item_post_location"
+            />
 
     </RelativeLayout>
 

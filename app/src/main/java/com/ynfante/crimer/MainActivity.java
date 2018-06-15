@@ -14,6 +14,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.ynfante.crimer.Models.Post;
 import com.ynfante.crimer.Models.User;
 
 import java.util.HashMap;
@@ -61,6 +62,12 @@ public class MainActivity extends AppCompatActivity {
     public void goToCreatePost() {
         Intent intent = new Intent(this, NewPostActivity.class);
         intent.putExtra("userInstance", userInstance);
+        startActivity(intent);
+    }
+
+    public void goToDetailedActivity(Post post) {
+        Intent intent = new Intent(this,  PostDetailActivity.class);
+        intent.putExtra("post", post);
         startActivity(intent);
     }
 

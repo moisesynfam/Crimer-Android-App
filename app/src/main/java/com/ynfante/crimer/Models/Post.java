@@ -1,6 +1,8 @@
 package com.ynfante.crimer.Models;
 
-public class Post {
+import java.io.Serializable;
+
+public class Post implements Serializable{
 
     private String userId;
     private String imageUrl;

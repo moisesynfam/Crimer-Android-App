@@ -18,8 +18,6 @@
     <string name="login_error_message">There was an error trying to log in. Please try again later.</string>
 
 
-
-
     <!--Image picker bottom sheet layout-->
     <string name="img_bttm_sheet_title">Add Profile Picture</string>
     <string name="img_bttm_sheet_camera_opt">Use Camera</string>
@@ -49,6 +47,8 @@
     <string name="general_yes">Yes</string>
     <string name="general_no">No</string>
     <string name="new_post_no_image_error_msg">You need to attach an image in order to create a Post.</string>
+
+    <string name="post_detail_activity_title">Post</string>
 
 
 </resources>

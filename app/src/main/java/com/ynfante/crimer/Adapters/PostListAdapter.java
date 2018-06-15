@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.mikhaellopez.circularimageview.CircularImageView;
+import com.ynfante.crimer.MainActivity;
 import com.ynfante.crimer.Models.Post;
 import com.ynfante.crimer.R;
 
@@ -28,7 +29,8 @@ public class PostListAdapter  extends RecyclerView.Adapter<PostListAdapter.PostV
     }
 
     public void updateData (ArrayList<Post> newPosts) {
-        posts = newPosts;
+        posts.clear();
+        posts.addAll(newPosts);
         notifyDataSetChanged();
     }
 
@@ -45,7 +47,7 @@ public class PostListAdapter  extends RecyclerView.Adapter<PostListAdapter.PostV
     @Override
     public void onBindViewHolder(@NonNull PostViewHolder holder, int position) {
 
-        Post post = posts.get(position);
+        final Post post = posts.get(position);
         if(post.getImageUrl() != null ) {
             Glide.with(activityContext)
                     .load(post.getImageUrl())
@@ -64,6 +66,22 @@ public class PostListAdapter  extends RecyclerView.Adapter<PostListAdapter.PostV
         holder.name.setText(post.getUser().getName());
 
 
+        if(post.getLocation().getPlace() != null ) {
+            holder.location.setVisibility(View.VISIBLE);
+            holder.location.setText(post.getLocation().getPlace());
+        } else {
+            holder.location.setVisibility(View.GONE);
+        }
+
+        holder.layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((MainActivity) activityContext).goToDetailedActivity(post);
+            }
+        });
+
+
+
 
 
     }
@@ -75,9 +93,10 @@ public class PostListAdapter  extends RecyclerView.Adapter<PostListAdapter.PostV
 
     public class PostViewHolder extends RecyclerView.ViewHolder {
 
-        TextView name, username, title, content;
+        TextView name, username, title, content, location;
         ImageView displayPicture;
         ImageView postImage;
+        View layout;
 
         public PostViewHolder(View itemView) {
             super(itemView);
@@ -85,8 +104,10 @@ public class PostListAdapter  extends RecyclerView.Adapter<PostListAdapter.PostV
             username = itemView.findViewById(R.id.item_post_username);
             title = itemView.findViewById(R.id.item_post_title);
             content = itemView.findViewById(R.id.item_post_content);
+            location = itemView.findViewById(R.id.item_post_location);
             displayPicture = itemView.findViewById(R.id.item_post_display_picture);
             postImage = itemView.findViewById(R.id.item_post_image);
+            layout = itemView.findViewById(R.id.item_post_ly);
 
 
         }

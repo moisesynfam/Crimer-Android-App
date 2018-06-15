@@ -6,8 +6,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
-
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <uses-feature
         android:name="android.hardware.camera"
@@ -31,13 +30,16 @@
             android:name=".LoginActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_login"
-            android:theme="@style/AppFullScreen"></activity>
+            android:theme="@style/AppFullScreen" />
         <activity
             android:name=".RegisterActivity"
             android:theme="@style/AppNoActionBar" />
-        <activity android:name=".NewPostActivity"
+        <activity
+            android:name=".NewPostActivity"
+            android:theme="@style/AppNoActionBar" />
+        <activity android:name=".PostDetailActivity"
             android:theme="@style/AppNoActionBar"
-            ></activity>
+            />
     </application>
 
 </manifest>

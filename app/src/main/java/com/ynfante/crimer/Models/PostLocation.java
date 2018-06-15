@@ -1,6 +1,8 @@
 package com.ynfante.crimer.Models;
 
-public class PostLocation {
+import java.io.Serializable;
+
+public class PostLocation implements Serializable{
 
     private String place;
     private Double longitude;
