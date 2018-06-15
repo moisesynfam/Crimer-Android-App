@@ -49,6 +49,7 @@
     <string name="new_post_no_image_error_msg">You need to attach an image in order to create a Post.</string>
 
     <string name="post_detail_activity_title">Post</string>
+    <string name="general_share">Share</string>
 
 
 </resources>

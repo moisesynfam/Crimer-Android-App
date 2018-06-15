@@ -69,16 +69,6 @@
                     android:layout_toEndOf="@id/post_detail_display_picture"
                     />
 
-                <ImageView
-                    android:background="?android:selectableItemBackground"
-                    android:id="@+id/post_detail_share_btn"
-                    android:padding="10dp"
-                    android:tint="@color/colorIcons"
-                    android:layout_alignParentEnd="true"
-                    app:srcCompat="@drawable/ic_share"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
             </RelativeLayout>
 
             <TextView
@@ -127,6 +117,7 @@
                 />
 
             <TextView
+                android:textSize="18sp"
                 android:layout_margin="10dp"
                 android:id="@+id/post_detail_content"
                 android:layout_width="match_parent"
