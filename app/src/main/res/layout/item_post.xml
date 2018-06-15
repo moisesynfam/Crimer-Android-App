@@ -6,6 +6,7 @@
     android:orientation="horizontal"
     android:weightSum="10"
     android:baselineAligned="false"
+    android:paddingBottom="20dp"
     >
 
     <FrameLayout
@@ -14,13 +15,14 @@
         android:layout_height="wrap_content">
 
         <com.mikhaellopez.circularimageview.CircularImageView
+            android:id="@+id/item_post_display_picture"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
             android:layout_margin="10dp"
             android:src="@mipmap/ic_launcher"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            app:civ_border="true"
             app:civ_border_color="@color/colorPrimaryLight"
-            app:civ_border_width="1dp"
-            app:civ_border="true" />
+            app:civ_border_width="1dp" />
     </FrameLayout>
 
     <RelativeLayout
@@ -69,20 +71,31 @@
             android:text="Lorem Ipsum is simply dummy text of the printing and typesetting indust..."
             />
 
-        <ImageView
-
+        <android.support.v7.widget.CardView
             android:layout_marginTop="10dp"
-            android:adjustViewBounds="true"
             android:layout_below="@id/item_post_content"
-            android:maxHeight="150dp"
-            android:scaleType="centerCrop"
-
-            android:id="@+id/item_post_image"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:src="@mipmap/ic_launcher"
+            app:cardCornerRadius="5dp"
+            app:cardElevation="0dp"
+            app:cardPreventCornerOverlap="true"
+            >
+            <ImageView
 
-            />
+
+                android:adjustViewBounds="true"
+
+                android:maxHeight="150dp"
+                android:scaleType="centerCrop"
+
+                android:id="@+id/item_post_image"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/ic_launcher"
+
+                />
+        </android.support.v7.widget.CardView>
+
     </RelativeLayout>
 
 

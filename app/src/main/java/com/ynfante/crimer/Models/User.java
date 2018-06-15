@@ -1,11 +1,14 @@
 package com.ynfante.crimer.Models;
 
-public class User {
+import java.io.Serializable;
+
+public class User implements Serializable {
 
     private String username;
     private String name;
     private String photoUrl;
     private String photoThumbnailUrl;
+
 
     public User() {
     }
@@ -15,7 +18,9 @@ public class User {
         this.name = name;
         this.photoUrl = photoUrl;
         this.photoThumbnailUrl = photoThumbnailUrl;
+
     }
+
 
     public String getUsername() {
         return username;
@@ -48,4 +53,5 @@ public class User {
     public void setPhotoThumbnailUrl(String photoThumbnailUrl) {
         this.photoThumbnailUrl = photoThumbnailUrl;
     }
+
 }

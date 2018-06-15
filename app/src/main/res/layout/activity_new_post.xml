@@ -53,18 +53,34 @@
 
 
 
-            <RelativeLayout
+            <android.support.v7.widget.CardView
 
                 android:id="@+id/new_post_image_panel"
                 android:visibility="gone"
                 android:layout_marginTop="15dp"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                app:cardElevation="0dp"
+                app:cardCornerRadius="8dp"
+                >
+
+
+
+
+                <ImageView
+                    android:src="@mipmap/ic_launcher"
+                    android:id="@+id/new_post_image"
+                    android:adjustViewBounds="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxHeight="500dp"
+                    android:scaleType="centerCrop"
+                    />
 
                 <android.support.design.widget.FloatingActionButton
                     android:id="@+id/new_post_remove_image_btn"
                     android:layout_margin="5dp"
-                    android:layout_alignParentEnd="true"
+                    android:layout_gravity="top|end"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:backgroundTint="@color/colorPrimaryDark"
@@ -72,14 +88,7 @@
                     android:visibility="gone"
                     />
 
-
-                <ImageView
-                    android:id="@+id/new_post_image"
-                    android:adjustViewBounds="true"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-            </RelativeLayout>
+            </android.support.v7.widget.CardView>
 
             <ImageButton
                 android:id="@+id/new_post_add_image_btn"

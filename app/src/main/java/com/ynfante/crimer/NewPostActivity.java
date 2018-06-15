@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -37,6 +38,7 @@ import com.mobsandgeeks.saripaar.annotation.NotEmpty;
 import com.myhexaville.smartimagepicker.ImagePicker;
 import com.myhexaville.smartimagepicker.OnImagePickedListener;
 import com.ynfante.crimer.Models.Post;
+import com.ynfante.crimer.Models.User;
 
 import java.util.List;
 import java.util.UUID;
@@ -53,7 +55,7 @@ public class NewPostActivity extends AppCompatActivity {
 
     private Uri imageUri;
 
-    private RelativeLayout imagePanel;
+    private CardView imagePanel;
 
     private FloatingActionButton removeImageFab;
 
@@ -76,6 +78,8 @@ public class NewPostActivity extends AppCompatActivity {
     private FirebaseUser user;
     private String postId;
 
+    private User userInstance;
+
 
 
     @Override
@@ -86,6 +90,9 @@ public class NewPostActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+
+        userInstance = (User) getIntent().getSerializableExtra("userInstance");
+        Log.d(TAG, "User: " + userInstance.getName());
         imagePanel = findViewById(R.id.new_post_image_panel);
         removeImageFab = findViewById(R.id.new_post_remove_image_btn);
         selectPictureBtn = findViewById(R.id.new_post_add_image_btn);
@@ -275,7 +282,8 @@ public class NewPostActivity extends AppCompatActivity {
     }
 
     public void storePost(String imageUrl) {
-        Post newPost = new Post(user.getUid(), imageUrl, title.getText().toString(), content.getText().toString());
+
+        Post newPost = new Post(user.getUid(), imageUrl, title.getText().toString(), content.getText().toString(), userInstance);
         database.collection("posts").document(postId).set(newPost).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
