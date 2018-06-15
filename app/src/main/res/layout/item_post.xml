@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:weightSum="10"
+    android:baselineAligned="false"
+    >
+
+    <FrameLayout
+        android:layout_weight="2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content">
+
+        <com.mikhaellopez.circularimageview.CircularImageView
+            android:layout_margin="10dp"
+            android:src="@mipmap/ic_launcher"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:civ_border_color="@color/colorPrimaryLight"
+            app:civ_border_width="1dp"
+            app:civ_border="true" />
+    </FrameLayout>
+
+    <RelativeLayout
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_weight="8"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/item_post_user"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorPrimaryText"
+            android:textStyle="bold"
+            android:text="Moises Ynfante"
+            />
+
+        <TextView
+            android:layout_marginStart="5dp"
+            android:layout_toEndOf="@id/item_post_user"
+            android:id="@+id/item_post_username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorSecondaryText"
+            android:text="amoisesYnf"
+            />
+
+        <TextView
+            android:layout_below="@id/item_post_user"
+            android:id="@+id/item_post_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorPrimaryText"
+            android:layout_marginTop="10dp"
+            android:text="This Is A Test Title"
+            />
+
+        <TextView
+            android:layout_below="@id/item_post_title"
+            android:id="@+id/item_post_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorSecondaryText"
+            android:layout_marginTop="5dp"
+            android:text="Lorem Ipsum is simply dummy text of the printing and typesetting indust..."
+            />
+
+        <ImageView
+
+            android:layout_marginTop="10dp"
+            android:adjustViewBounds="true"
+            android:layout_below="@id/item_post_content"
+            android:maxHeight="150dp"
+            android:scaleType="centerCrop"
+
+            android:id="@+id/item_post_image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/ic_launcher"
+
+            />
+    </RelativeLayout>
+
+
+</LinearLayout>

@@ -13,7 +13,6 @@
         android:layout_height="?android:actionBarSize"
         app:navigationIcon="@drawable/ic_arrow_back"
         android:id="@+id/toolbar"
-        android:elevation="4dp"
         app:title="@string/register_register"
         app:titleTextColor="@color/colorWhiteText"
         app:elevation="4dp"

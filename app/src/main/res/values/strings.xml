@@ -6,27 +6,45 @@
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
+    <string name="name">Name</string>
+    <string name="username">Username</string>
+
+    <!--Log in Activity-->
     <string name="login_welcome_title">Welcome to Crimer</string>
     <string name="login_welcome_subtitle">Log in with your Crimer Account.</string>
     <string name="login_log_in">Log In</string>
     <string name="login_register">Create An Account</string>
     <string name="login_register_dialog">Don\'t have an account yet?</string>
-    <string name="register_title">Creating Account</string>
-    <string name="name">Name</string>
-    <string name="username">Username</string>
-    <string name="register_register">Register</string>
-    <string name="register_select_image_dialog">Select Picture</string>
+    <string name="login_error_message">There was an error trying to log in. Please try again later.</string>
+
+
+
 
     <!--Image picker bottom sheet layout-->
     <string name="img_bttm_sheet_title">Add Profile Picture</string>
     <string name="img_bttm_sheet_camera_opt">Use Camera</string>
     <string name="img_bttm_sheet_gallery_opt">Use Gallery</string>
     <string name="img_bttm_sheet_delete_opt">Remove Picture</string>
+
+    <!-- Register Activity-->
+    <string name="register_title">Creating Account</string>
     <string name="register_user_loading_title">Storing your information. Please wait..</string>
     <string name="register_image_uploading_error_title">Error uploading image</string>
     <string name="register_image_uploading_error_content">There was an error trying to upload your profile picture to the server. Please try again later</string>
-    <string name="general_dismiss">Dismiss</string>
     <string name="register_user_error_title">Error registering your data</string>
     <string name="register_user_error_content">There was an error trying to store your data to the server. Please try again later</string>
-    <string name="login_error_message">There was an error trying to log in. Please try again later.</string>
+    <string name="register_register">Register</string>
+    <string name="register_select_image_dialog">Select Picture</string>
+
+
+    <!--General Strings -->
+    <string name="general_dismiss">Dismiss</string>
+
+    <!--New Post Activity-->
+    <string name="new_post_activity_title">New Post</string>
+    <string name="new_post_title">Post Title</string>
+    <string name="new_post_content">Content</string>
+
+
+
 </resources>
