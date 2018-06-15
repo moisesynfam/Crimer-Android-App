@@ -8,17 +8,28 @@ public class Post {
     private String content;
 
     private User user;
+    private PostLocation location;
 
     public Post() {
 
     }
 
-    public Post(String userId, String imageUrl, String title, String content, User user) {
+
+    public Post(String userId, String imageUrl, String title, String content, User user, PostLocation location) {
         this.userId = userId;
         this.imageUrl = imageUrl;
         this.title = title;
         this.content = content;
         this.user = user;
+        this.location = location;
+    }
+
+    public PostLocation getLocation() {
+        return location;
+    }
+
+    public void setLocation(PostLocation location) {
+        this.location = location;
     }
 
     public String getUserId() {
