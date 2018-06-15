@@ -6,10 +6,13 @@
     android:layout_height="match_parent"
     tools:context="com.ynfante.crimer.MainActivity">
 
-    <Button
-        android:text="Log Out"
-        android:id="@+id/main_log_out_btn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+   <fragment
+       android:name="com.ynfante.crimer.PostsFragment"
+       android:layout_width="match_parent"
+       android:layout_height="match_parent"
+       tools:layout="@layout/fragment_posts_list"
+       android:id="@+id/posts_fragment"
+
+       />
 
 </LinearLayout>

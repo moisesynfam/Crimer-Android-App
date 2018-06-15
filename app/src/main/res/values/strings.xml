@@ -43,8 +43,12 @@
     <!--New Post Activity-->
     <string name="new_post_activity_title">New Post</string>
     <string name="new_post_title">Post Title</string>
-    <string name="new_post_content">Content</string>
-
+    <string name="new_post_content">What\'s happening?</string>
+    <string name="new_post_menu_post">Post</string>
+    <string name="new_post_cancel_dialog_title">Are you sure you want leave?</string>
+    <string name="general_yes">Yes</string>
+    <string name="general_no">No</string>
+    <string name="new_post_no_image_error_msg">You need to attach an image in order to create a Post.</string>
 
 
 </resources>

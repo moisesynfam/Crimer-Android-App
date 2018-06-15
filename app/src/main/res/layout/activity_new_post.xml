@@ -11,6 +11,7 @@
     <android.support.v7.widget.Toolbar
 
         app:elevation="4dp"
+        android:elevation="4dp"
         android:background="@color/colorPrimary"
         android:layout_width="match_parent"
         android:layout_height="?android:actionBarSize"
@@ -27,11 +28,70 @@
         <LinearLayout
             android:padding="16dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
 
             <EditText
+                android:id="@+id/new_post_title"
+                android:hint="@string/new_post_title"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+
+                />
+
+            <EditText
+                android:id="@+id/new_post_content"
+                android:layout_marginTop="15dp"
+                android:inputType="text|textMultiLine"
+                android:hint="@string/new_post_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+
+                />
+
+
+
+            <RelativeLayout
+
+                android:id="@+id/new_post_image_panel"
+                android:visibility="gone"
+                android:layout_marginTop="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/new_post_remove_image_btn"
+                    android:layout_margin="5dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:backgroundTint="@color/colorPrimaryDark"
+                    app:srcCompat="@drawable/ic_close"
+                    android:visibility="gone"
+                    />
+
+
+                <ImageView
+                    android:id="@+id/new_post_image"
+                    android:adjustViewBounds="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </RelativeLayout>
+
+            <ImageButton
+                android:id="@+id/new_post_add_image_btn"
+                app:srcCompat="@drawable/ic_add_a_photo"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                style="@style/FloatingButton"
+                android:tint="@color/colorAccent"
+                />
+
+
+
 
         </LinearLayout>
     </ScrollView>

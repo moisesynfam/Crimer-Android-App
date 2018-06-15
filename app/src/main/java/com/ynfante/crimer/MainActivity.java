@@ -28,15 +28,6 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        logOutBtn = findViewById(R.id.main_log_out_btn);
-
-        logOutBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                firebaseAuth.signOut();
-            }
-        });
-
 
     }
 }
