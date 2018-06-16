@@ -47,6 +47,8 @@ public class ProfileFragment extends Fragment implements EventListener<QuerySnap
     private ImageView profilePicture;
     private TextView name, username;
 
+    private View noPostsMessage;
+
 
     public ProfileFragment() {
         super();
@@ -73,6 +75,7 @@ public class ProfileFragment extends Fragment implements EventListener<QuerySnap
         name = view.findViewById(R.id.profile_user);
         username = view.findViewById(R.id.profile_username);
 
+        noPostsMessage = view.findViewById(R.id.no_posts_msg);
 
         postsListRecycler = view.findViewById(R.id.posts_list_recycler);
 
@@ -134,6 +137,8 @@ public class ProfileFragment extends Fragment implements EventListener<QuerySnap
             ArrayList<Post> newPosts = new ArrayList<>(queryDocumentSnapshots.toObjects(Post.class));
             Log.d(TAG, newPosts.toString());
             postsAdapter.updateData(newPosts);
+            noPostsMessage.setVisibility( postsAdapter.getItemCount() > 0 ? View.GONE : View.VISIBLE);
+
         }
 
 

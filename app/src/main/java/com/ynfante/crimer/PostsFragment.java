@@ -32,6 +32,8 @@ public class PostsFragment extends Fragment implements EventListener<QuerySnapsh
     private PostListAdapter postsAdapter;
     private FirebaseFirestore database;
 
+    private View noPostsMessage;
+
 
     public PostsFragment() {
         super();
@@ -50,7 +52,7 @@ public class PostsFragment extends Fragment implements EventListener<QuerySnapsh
 
             }
         });
-
+        noPostsMessage = view.findViewById(R.id.no_posts_msg);
         postsListRecycler = view.findViewById(R.id.posts_list_recycler);
 
         postsAdapter = new PostListAdapter(getActivity());
@@ -77,6 +79,7 @@ public class PostsFragment extends Fragment implements EventListener<QuerySnapsh
             ArrayList<Post> newPosts = new ArrayList<Post>(queryDocumentSnapshots.toObjects(Post.class));
             Log.d(TAG, newPosts.toString());
             postsAdapter.updateData(newPosts);
+            noPostsMessage.setVisibility( postsAdapter.getItemCount() > 0 ? View.GONE : View.VISIBLE);
         }
 
 

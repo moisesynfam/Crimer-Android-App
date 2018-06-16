@@ -9,7 +9,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.GenericTransitionOptions;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.ynfante.crimer.MainActivity;
 import com.ynfante.crimer.Models.Post;
@@ -52,7 +54,9 @@ public class PostListAdapter  extends RecyclerView.Adapter<PostListAdapter.PostV
         final Post post = posts.get(position);
         if(post.getImageUrl() != null ) {
             Glide.with(activityContext)
+
                     .load(post.getImageUrl())
+                    .transition(new DrawableTransitionOptions().crossFade())
                     .into(holder.postImage);
         }
 

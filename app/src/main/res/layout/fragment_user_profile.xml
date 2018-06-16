@@ -54,12 +54,43 @@
 
 
         </LinearLayout>
-
-        <android.support.v7.widget.RecyclerView
+        <RelativeLayout
+            android:animateLayoutChanges="true"
             android:layout_weight="7"
-            android:id="@+id/posts_list_recycler"
             android:layout_width="match_parent"
-            android:layout_height="0dp"/>
+            android:layout_height="0dp">
+
+
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/posts_list_recycler"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+            <LinearLayout
+            android:id="@+id/no_posts_msg"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                    android:tint="@color/colorIconsLight"
+                    app:srcCompat="@drawable/ic_mode_comment"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp" />
+
+                <TextView
+                    android:textColor="@color/colorSecondaryText"
+                    android:text="@string/no_posts_to_display"
+                    android:gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+
+            </LinearLayout>
+        </RelativeLayout>
+
+
 
     </LinearLayout>
 

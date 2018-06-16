@@ -53,6 +53,7 @@
     <string name="general_posts">Posts</string>
     <string name="general_profile">Profile</string>
     <string name="general_logout">Logout</string>
+    <string name="no_posts_to_display">No posts to display.</string>
 
 
 </resources>
