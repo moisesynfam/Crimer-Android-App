@@ -50,6 +50,9 @@
 
     <string name="post_detail_activity_title">Post</string>
     <string name="general_share">Share</string>
+    <string name="general_posts">Posts</string>
+    <string name="general_profile">Profile</string>
+    <string name="general_logout">Logout</string>
 
 
 </resources>

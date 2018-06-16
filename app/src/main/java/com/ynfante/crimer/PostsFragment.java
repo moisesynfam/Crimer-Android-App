@@ -1,9 +1,10 @@
 package com.ynfante.crimer;
 
-import android.app.Fragment;
+
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,6 +17,7 @@ import android.view.ViewGroup;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.ynfante.crimer.Adapters.PostListAdapter;
 import com.ynfante.crimer.Models.Post;
@@ -60,7 +62,7 @@ public class PostsFragment extends Fragment implements EventListener<QuerySnapsh
                 DividerItemDecoration.VERTICAL));
 
         database = FirebaseFirestore.getInstance();
-        database.collection("posts").addSnapshotListener(this);
+        database.collection("posts").orderBy("publishedDate", Query.Direction.DESCENDING).addSnapshotListener(this);
 
 
         return view;
@@ -71,9 +73,12 @@ public class PostsFragment extends Fragment implements EventListener<QuerySnapsh
     @Override
     public void onEvent(@javax.annotation.Nullable QuerySnapshot queryDocumentSnapshots, @javax.annotation.Nullable FirebaseFirestoreException e) {
         Log.d(TAG, "GETTING POSTS");
-        ArrayList<Post> newPosts = new ArrayList<Post>(queryDocumentSnapshots.toObjects(Post.class));
-        Log.d(TAG, newPosts.toString());
-        postsAdapter.updateData(newPosts);
+        if(queryDocumentSnapshots != null) {
+            ArrayList<Post> newPosts = new ArrayList<Post>(queryDocumentSnapshots.toObjects(Post.class));
+            Log.d(TAG, newPosts.toString());
+            postsAdapter.updateData(newPosts);
+        }
+
 
     }
 }

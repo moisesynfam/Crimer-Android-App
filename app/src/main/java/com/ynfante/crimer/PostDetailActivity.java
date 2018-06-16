@@ -86,9 +86,12 @@ public class PostDetailActivity extends AppCompatActivity {
                 .load(post.getImageUrl())
                 .into(postImage);
 
-        Glide.with(this)
-                .load(userPost.getPhotoUrl())
-                .into(displayPicture);
+        if(userPost.getPhotoUrl() != null) {
+            Glide.with(this)
+                    .load(userPost.getPhotoUrl())
+                    .into(displayPicture);
+
+        }
 
 
 

@@ -2,9 +2,15 @@ package com.ynfante.crimer;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
@@ -36,10 +42,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         database = FirebaseFirestore.getInstance();
-//        FirebaseFirestoreSettings databaseSettings = new FirebaseFirestoreSettings.Builder()
-//                .setTimestampsInSnapshotsEnabled(true)
-//                .build();
-//        database.setFirestoreSettings(databaseSettings);
         firebaseAuth = FirebaseAuth.getInstance();
         signedUser = firebaseAuth.getCurrentUser();
 
@@ -51,6 +53,19 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
+        Toolbar toolbar =  findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        TabLayout tabLayout =  findViewById(R.id.tab_layout);
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.general_posts));
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.general_profile));
+        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+
+         ViewPager viewPager =  findViewById(R.id.pager);
+         TabsPagerAdapter adapter = new TabsPagerAdapter
+                (getSupportFragmentManager(), tabLayout.getTabCount());
+        viewPager.setAdapter(adapter);
+        tabLayout.setupWithViewPager(viewPager);
 
         database.collection("users").document(signedUser.getUid()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -81,5 +96,23 @@ public class MainActivity extends AppCompatActivity {
 
     public User getUserInstance() {
         return userInstance;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_activity_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        if(item.getItemId() == R.id.log_out_button) {
+            firebaseAuth.signOut();
+            startActivity(new Intent(this, LoginActivity.class));
+            finish();
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

@@ -60,6 +60,10 @@ public class PostListAdapter  extends RecyclerView.Adapter<PostListAdapter.PostV
             Glide.with(activityContext)
                     .load(post.getUser().getPhotoUrl())
                     .into(holder.displayPicture);
+        }else {
+            Glide.with(activityContext)
+                    .load(R.mipmap.ic_launcher)
+                    .into(holder.displayPicture);
         }
 
         holder.content.setText(post.getContent());
