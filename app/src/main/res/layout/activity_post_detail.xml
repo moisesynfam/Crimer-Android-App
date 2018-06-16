@@ -57,6 +57,17 @@
                     android:textStyle="bold"
                     android:text="Moises Ynfante"
                     />
+                <TextView
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:id="@+id/post_detail_date"
+                    android:layout_alignParentEnd="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorSecondaryText"
+                    android:text="Here goes the date"
+                    />
+
 
                 <TextView
                     android:layout_below="@id/post_detail_user"

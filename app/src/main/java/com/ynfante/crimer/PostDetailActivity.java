@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.os.StrictMode;
 import android.support.annotation.Nullable;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -32,12 +33,14 @@ import com.ynfante.crimer.R;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
+import java.text.DateFormat;
 
 
 public class PostDetailActivity extends AppCompatActivity {
 
-    private TextView name, username, title, content, location;
+    private TextView name, username, title, content, location, date;
     private ImageView displayPicture, postImage;
     private Post post;
 
@@ -67,6 +70,7 @@ public class PostDetailActivity extends AppCompatActivity {
         location = findViewById(R.id.post_detail_location);
         displayPicture = findViewById(R.id.post_detail_display_picture);
         postImage = findViewById(R.id.post_detail_image);
+        date = findViewById(R.id.post_detail_date);
 
         User userPost = post.getUser();
 
@@ -75,6 +79,8 @@ public class PostDetailActivity extends AppCompatActivity {
         title.setText(post.getTitle());
         content.setText(post.getContent());
         location.setText(post.getLocation().getPlace());
+
+        date.setText(DateFormat.getDateInstance(DateFormat.LONG).format(post.getPublishedDate()));
 
         Glide.with(this)
                 .load(post.getImageUrl())
@@ -97,7 +103,8 @@ public class PostDetailActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId() == R.id.post_detail_share) {
-            sharePost();
+//            sharePost();
+            newShare();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -110,6 +117,7 @@ public class PostDetailActivity extends AppCompatActivity {
         Intent shareIntent;
 
         Bitmap bitmap = ((BitmapDrawable)postImage.getDrawable()).getBitmap();
+
         String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)+"/Share.jpeg";
         OutputStream out = null;
         File file=new File(path);
@@ -133,6 +141,36 @@ public class PostDetailActivity extends AppCompatActivity {
 
 
 
+
+    }
+
+    private void newShare() {
+        Bitmap bitmap = ((BitmapDrawable)postImage.getDrawable()).getBitmap();
+        try {
+
+            File cachePath = new File(getCacheDir(), "images");
+            cachePath.mkdirs(); // don't forget to make the directory
+            FileOutputStream stream = new FileOutputStream(cachePath + "/image.jpeg"); // overwrites this image every time
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+            stream.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        File imagePath = new File(this.getCacheDir(), "images");
+        File newFile = new File(imagePath, "image.jpeg");
+        Uri contentUri = FileProvider.getUriForFile(this, "com.ynfante.crimer.fileprovider", newFile);
+
+        if (contentUri != null) {
+            Intent shareIntent = new Intent();
+            shareIntent.setAction(Intent.ACTION_SEND);
+            shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION); // temp permission for receiving app to read this file
+            shareIntent.setDataAndType(contentUri, getContentResolver().getType(contentUri));
+            shareIntent.putExtra(Intent.EXTRA_STREAM, contentUri);
+            shareIntent.putExtra(Intent.EXTRA_TEXT,post.getTitle() + "\n\n" + post.getContent());
+            startActivity(Intent.createChooser(shareIntent, "Choose an app"));
+        }
 
     }
 }

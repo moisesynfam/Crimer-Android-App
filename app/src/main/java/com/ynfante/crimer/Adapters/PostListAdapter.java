@@ -15,7 +15,9 @@ import com.ynfante.crimer.MainActivity;
 import com.ynfante.crimer.Models.Post;
 import com.ynfante.crimer.R;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.zip.Inflater;
 
 public class PostListAdapter  extends RecyclerView.Adapter<PostListAdapter.PostViewHolder>{
@@ -62,7 +64,7 @@ public class PostListAdapter  extends RecyclerView.Adapter<PostListAdapter.PostV
 
         holder.content.setText(post.getContent());
         holder.title.setText(post.getTitle());
-        holder.username.setText("@"+post.getUser().getUsername());
+        holder.username.setText("@"+post.getUser().getUsername() + " - " + DateFormat.getDateInstance(DateFormat.SHORT).format(post.getPublishedDate()));
         holder.name.setText(post.getUser().getName());
 
 

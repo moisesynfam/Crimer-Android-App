@@ -14,6 +14,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.ynfante.crimer.Models.Post;
 import com.ynfante.crimer.Models.User;
 
@@ -33,8 +34,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        database = FirebaseFirestore.getInstance();
+//        FirebaseFirestoreSettings databaseSettings = new FirebaseFirestoreSettings.Builder()
+//                .setTimestampsInSnapshotsEnabled(true)
+//                .build();
+//        database.setFirestoreSettings(databaseSettings);
         firebaseAuth = FirebaseAuth.getInstance();
         signedUser = firebaseAuth.getCurrentUser();
+
 
         if(signedUser == null) {
 
@@ -42,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
             finish();
             return;
         }
-        database = FirebaseFirestore.getInstance();
+
 
         database.collection("users").document(signedUser.getUid()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override

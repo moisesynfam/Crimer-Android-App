@@ -40,6 +40,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -55,6 +56,7 @@ import com.ynfante.crimer.Models.User;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
@@ -235,6 +237,8 @@ public class NewPostActivity extends AppCompatActivity {
         geocoder = new Geocoder(this, Locale.getDefault());
 
 
+
+
         initDialogs();
         checkLocationPermission();
     }
@@ -411,7 +415,7 @@ public class NewPostActivity extends AppCompatActivity {
             postLocation = new PostLocation(location.getText().toString(), null, null);
         }
 
-        Post newPost = new Post(user.getUid(), imageUrl, title.getText().toString(), content.getText().toString(), userInstance, postLocation);
+        Post newPost = new Post(user.getUid(), imageUrl, title.getText().toString(), content.getText().toString(), userInstance, postLocation, new Date());
         database.collection("posts").document(postId).set(newPost).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {

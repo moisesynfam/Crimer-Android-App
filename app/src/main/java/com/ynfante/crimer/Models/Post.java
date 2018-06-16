@@ -1,6 +1,7 @@
 package com.ynfante.crimer.Models;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class Post implements Serializable{
 
@@ -11,19 +12,29 @@ public class Post implements Serializable{
 
     private User user;
     private PostLocation location;
+    private Date publishedDate;
 
     public Post() {
 
     }
 
 
-    public Post(String userId, String imageUrl, String title, String content, User user, PostLocation location) {
+    public Post(String userId, String imageUrl, String title, String content, User user, PostLocation location, Date publishedDate) {
         this.userId = userId;
         this.imageUrl = imageUrl;
         this.title = title;
         this.content = content;
         this.user = user;
         this.location = location;
+        this.publishedDate = publishedDate;
+    }
+
+    public Date getPublishedDate() {
+        return publishedDate;
+    }
+
+    public void setPublishedDate(Date publishedDate) {
+        this.publishedDate = publishedDate;
     }
 
     public PostLocation getLocation() {
